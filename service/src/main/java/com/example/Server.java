@@ -20,8 +20,7 @@ public class Server extends Thread {
         this.listener = listener;
     }
 
-
-    boolean started = false;
+    boolean started = false;//是否已经启动
     ServerSocket ss = null;
     List<Client> clients = new ArrayList<Client>();
 
@@ -30,7 +29,7 @@ public class Server extends Thread {
         // TODO Auto-generated method stub
         super.run();
         try {
-            ss = new ServerSocket(8888);
+            ss = new ServerSocket(8887);
             started = true;
             System.out.println("server is started");
         } catch (BindException e) {
@@ -43,7 +42,7 @@ public class Server extends Thread {
 
         try {
             while (started) {
-                Socket s = ss.accept();
+                Socket s = ss.accept();//持续监听新的socket连接
                 Client c = new Client(s, Server.this);
                 System.out.println("a client connected!");
                 new Thread(c).start();
@@ -61,7 +60,7 @@ public class Server extends Thread {
     }
 
 
-    public synchronized void snedMessage(String msg) {
+    public synchronized void sendMessage(String msg) {
         for (Client client1 : clients) {
             client1.send(msg);
         }

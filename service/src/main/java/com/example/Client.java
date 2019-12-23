@@ -11,7 +11,7 @@ public class Client implements Runnable{
 	private Socket s;
 	private DataInputStream dis = null;
 	private DataOutputStream dos = null;
-	private boolean bConnected = false;
+	private boolean connected = false;
 	private Server server;
 
 	public Socket getSocket() {
@@ -24,7 +24,7 @@ public class Client implements Runnable{
 		try {
 			dis = new DataInputStream(s.getInputStream());
 			dos = new DataOutputStream(s.getOutputStream());
-			bConnected = true;
+			connected = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -35,13 +35,12 @@ public class Client implements Runnable{
 			dos.writeUTF(str);
 		} catch (IOException e) {
 			server.removeClient(this);
-		
 		}
 	}
 
 	public void run() {
 		try {
-			while (bConnected) {
+			while (connected) {
 				String str = dis.readUTF();
 				server.newMessage(str,this);
 			}
@@ -80,7 +79,6 @@ public class Client implements Runnable{
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return s.toString();
 	}
 }

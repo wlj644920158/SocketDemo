@@ -35,13 +35,15 @@ public class Chatroom extends JFrame implements Server.OnServiceListener, Action
         historyLabel.setBounds(100, 0, 500, 30);
 
         historyContentLabel = new JTextArea();
-        jScrollPane=new JScrollPane(historyContentLabel);
+        jScrollPane = new JScrollPane(historyContentLabel);
         jScrollPane.setBounds(100, 30, 500, 230);
         //分别设置水平和垂直滚动条自动出现
         jScrollPane.setHorizontalScrollBarPolicy(
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         jScrollPane.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        historyContentLabel.setEditable(false);
 
         messageText = new JTextField();
         messageText.setBounds(100, 270, 440, 30);
@@ -76,24 +78,26 @@ public class Chatroom extends JFrame implements Server.OnServiceListener, Action
     public void onClientChanged(List<Client> clients) {
         // TODO Auto-generated method stub
         clientList.setListData(clients.toArray());
+
     }
 
 
     @Override
     public void onNewMessage(String message, Client client) {
         // TODO Auto-generated method stub
-        buffers.append(client.getSocket().getInetAddress().toString()+"\n");
-        buffers.append(message+"\n");
+        buffers.append(client.getSocket().getInetAddress().toString() + "\n");
+        buffers.append(message + "\n");
         historyContentLabel.setText(buffers.toString());
+        historyContentLabel.setCaretPosition(historyContentLabel.getDocument().getLength());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
         if (e.getSource() == sendButton) {
-            server.snedMessage("服务器#"+messageText.getText().toString());
-            buffers.append("服务器"+"\n");
-            buffers.append(messageText.getText().toString()+"\n");
+            server.sendMessage("服务器#" + messageText.getText());
+            buffers.append("服务器" + "\n");
+            buffers.append(messageText.getText() + "\n");
             historyContentLabel.setText(buffers.toString());
         }
     }
